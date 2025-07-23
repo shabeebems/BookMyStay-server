@@ -1,115 +1,109 @@
-import { Messages } from "../../../constants/messages";
-import { UserRepository } from "../../../repositories/user.repositories"
-import sendOtp from "../../../utils/sendOtp";
-import { IAuthService, ServiceResponse } from "../interfaces/auth.interface";
-import bcrypt from 'bcrypt';
-import redis from '../../../config/redis';
-import { IUser } from "../../../models/user.model";
-import { createAccessToken, createRefreshToken } from "../../../utils/jwt";
 import { Response } from "express";
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+
+import redis from "../../../config/redis";
+import sendOtp from "../../../utils/sendOtp";
+import sendResetLink from "../../../utils/sendResetLink";
+import { createAccessToken, createRefreshToken } from "../../../utils/jwt";
+import { IUser } from "../../../models/user.model";
+import { UserRepository } from "../../../repositories/user.repositories";
+import { IAuthService, ServiceResponse } from "../interfaces/auth.interface";
+import { Messages } from "../../../constants/messages";
 
 export class AuthService implements IAuthService {
-    private userRepository: UserRepository;
-
-    constructor() {
-        this.userRepository = new UserRepository();
-    }
+    private userRepository = new UserRepository();
 
     public async register(data: IUser): Promise<ServiceResponse> {
-        try {
-            const { email } = data
-            const existingUser = await this.userRepository.findByEmail(email)
-            if(existingUser) {
-                return { success: false, message: Messages.EMAIL_ALREADY_EXISTS }                
-            }
+        const { email } = data;
+        const existingUser = await this.userRepository.findByEmail(email);
+        if (existingUser) return { success: false, message: Messages.EMAIL_EXISTS };
 
-            data.password = await bcrypt.hash(data.password, 10);
-            const otp = Math.floor(1000 + Math.random() * 9000);
-            
-            await sendOtp(email, otp)
-            await redis.set(`user:${email}`, JSON.stringify({ ...data, otp }), 'EX', 300 );
+        data.password = await bcrypt.hash(data.password, 10);
+        const otp = Math.floor(1000 + Math.random() * 9000);
 
-            return { success: true, message: Messages.USER_CREATED_SUCCESS }                
-        } catch (error) {
-            return { success: false, message: Messages.INTERNAL_SERVER_ERROR }                
+        await sendOtp(email, otp);
+        await redis.set(`user:${email}`, JSON.stringify({ ...data, otp }), "EX", 300);
+
+        return { success: true, message: Messages.USER_REGISTERED };
+    }
+
+    public async verifyOtp(data: { email: string; otp: string; role: string }): Promise<ServiceResponse> {
+        const redisData = await redis.get(`user:${data.email}`);
+        if (!redisData) return { success: false, message: Messages.OTP_EXPIRED };
+
+        const parsedData = JSON.parse(redisData);
+        if (parsedData.otp != data.otp) return { success: false, message: Messages.OTP_INVALID };
+
+        const { otp, ...payload } = parsedData;
+        payload.role = data.role;
+        payload.isVerified = data.role === "user";
+
+        await this.userRepository.create(payload);
+        await redis.del(`user:${data.email}`);
+
+        return { success: true, message: Messages.OTP_VERIFIED };
+    }
+
+    public async resendOtp({ email }: { email: string }): Promise<ServiceResponse> {
+        const redisData = await redis.get(`user:${email}`);
+        if (!redisData) return { success: false, message: Messages.OTP_NOT_FOUND };
+
+        const parsedData = JSON.parse(redisData);
+        const newOtp = Math.floor(1000 + Math.random() * 9000);
+        parsedData.otp = newOtp;
+
+        await redis.set(`user:${email}`, JSON.stringify(parsedData));
+        await sendOtp(email, newOtp);
+
+        return { success: true, message: Messages.OTP_RESENT };
+    }
+
+    public async login(res: Response, data: { email: string; password: string; role: string }): Promise<ServiceResponse> {
+        const user = await this.userRepository.findByEmail(data.email);
+        if (!user) return { success: false, message: Messages.USER_NOT_FOUND };
+        if (data.role !== user.role) {
+            return { 
+                success: false,
+                message: `You are not ${data.role}, go to ${user.role} page` 
+
+            };
         }
+        if (!(await bcrypt.compare(data.password, user.password))) return { success: false, message: Messages.PASSWORD_INCORRECT };
+        if (user.isBlock) return { success: false, message: Messages.USER_BLOCKED };
+
+        const payload = { _id: user._id, email: user.email, role: user.role };
+        await createAccessToken(res, payload);
+        await createRefreshToken(res, payload);
+
+        return { success: true, message: Messages.LOGIN_SUCCESS };
     }
 
-    public async verifyOtp(data: { email: string, otp: string, role: string }): Promise<ServiceResponse> {
-        try {
-            const redisData = await redis.get(`user:${data.email}`);
-            if(redisData) {
-                const parsedData = JSON.parse(redisData);
-                if(parsedData.otp == data.otp) {
-                    const { otp, ...payload } = parsedData
-                    payload.role = data.role
-                    payload.isVerified = false
-                    if(data.role === "user") {
-                        payload.isVerified = true
-                    }
-                    await this.userRepository.create(payload)
-                    await redis.del(`user:${data.email}`);
-                    return { success: true, message: Messages.OTP_VERIFICATION_SUCCESS };  
-                } else {
-                    return { success: false, message: Messages.WRONG_OTP };  
-                }
-            }
-            return { success: false, message: Messages.OTP_EXPIRED };
-        } catch (error) {
-            return { success: false, message: Messages.INTERNAL_SERVER_ERROR };
-        }             
+    public async forgetPassword({ email, role }: { email: string; role: string }): Promise<ServiceResponse> {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) return { success: false, message: Messages.USER_NOT_FOUND };
+
+        const token = crypto.randomBytes(20).toString("hex");
+        await redis.set(`password_reset:${token}`, JSON.stringify({ email }), "EX", 900);
+
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}&role=${role}`;
+        await sendResetLink(email, resetLink);
+
+        return { success: true, message: Messages.RESET_LINK_SENT };
     }
 
-    public async resendOtp(data: { email: string }): Promise<ServiceResponse> {
-        try {
-            const redisData = await redis.get(`user:${data.email}`);
-            if(redisData) {
-                const parsedData = JSON.parse(redisData);
-                const newOtp = Math.floor(1000 + Math.random() * 9000);
-                parsedData.otp = newOtp;
+    public async resetPassword({ token, password }: { token: string; password: string }): Promise<ServiceResponse> {
+        const redisData = await redis.get(`password_reset:${token}`);
+        if (!redisData) return { success: false, message: Messages.RESET_FAILED };
 
-                await redis.set(`user:${data.email}`, JSON.stringify(parsedData));
-                await sendOtp(data.email, newOtp)
+        const { email } = JSON.parse(redisData);
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) return { success: false, message: Messages.USER_NOT_FOUND };
 
-                return { success: true, message: "resended" };
-            }
-            return { success: false, message: "time over" };
-        } catch (error) {
-            return { success: false, message: Messages.INTERNAL_SERVER_ERROR };
-        }             
+        const hashed = await bcrypt.hash(password, 10);
+        await this.userRepository.updatePasswordByEmail(email, hashed);
+        await redis.del(`password_reset:${token}`);
+
+        return { success: true, message: Messages.PASSWORD_RESET_SUCCESS };
     }
-
-    public async login(res: Response, data: { email: string, password: string, role: string }): Promise<ServiceResponse> {
-        try {
-            const { email, password, role } = data
-            const existingUser = await this.userRepository.findByEmail(email)
-            if(!existingUser) {
-                return { success: false, message: "User not found" };
-            }
-            if(role !== existingUser.role) {
-                return {
-                    success: false,
-                    message: `You are not ${role}, go to ${existingUser.role} page`,
-                };
-            }
-
-            const checkPassword = await bcrypt.compare(password, existingUser.password);
-            if(!checkPassword) {
-                return { success: false, message: "INCORRECT_PASSWORD" };
-            }
-
-            if (existingUser.isBlock) {
-                return { success: false, message: "BLOCK_USER" };
-            }
-
-            const payload = { _id: existingUser._id, email, role };
-            await createAccessToken(res, payload)
-            await createRefreshToken(res, payload)
-            
-            return { success: true, message: "Login completed" };
-        } catch (error) {
-            return { success: false, message: Messages.INTERNAL_SERVER_ERROR };
-        }             
-    }
-
 }
