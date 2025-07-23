@@ -1,7 +1,12 @@
 import { Request, Response } from "express";
 
-type ExpressHandler = (req: Request, res: Response) => Promise<void>;
+export type ExpressHandler = (req: Request, res: Response) => Promise<void>;
 
 export interface IAuthController {
-    register : ExpressHandler;
+    register: ExpressHandler;
+    verifyOtp: ExpressHandler;
+    resendOtp: ExpressHandler;
+    login: ExpressHandler;
+    forgetPassword: ExpressHandler;
+    resetPassword: ExpressHandler;
 }

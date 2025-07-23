@@ -7,7 +7,11 @@ export class UserRepository extends BaseRepository<IUser> {
         super(UserModel);
     }
 
-    async findByEmail(email: string): Promise<IUser | null> {
-        return UserModel.findOne({ email });
+    findByEmail(email: string): Promise<IUser | null> {
+        return this.model.findOne({ email });
+    }
+
+    async updatePasswordByEmail(email: string, password: string): Promise<void> {
+        await this.model.findOneAndUpdate({ email }, { $set: { password } }, { new: true });
     }
 }
