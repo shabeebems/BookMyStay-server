@@ -5,7 +5,7 @@ import authRouter from './routes/auth.routes';
 import connectDB from './config/db';
 import cors from 'cors';
 import session from 'express-session';
-import './utils/passport';  // <-- Add this line (Important!)
+import './utils/passport';
 import googleAuthRouter from './routes/googleAuth.routes';
 
 dotenv.config();
