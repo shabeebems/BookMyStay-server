@@ -11,7 +11,7 @@ export interface IUser extends Document {
     mobile: number;
     address: IAddress;
     password: string;
-    role: 'user' | 'owner' | 'admin';
+    role: string;
     isVerified: boolean;
     isBlock: boolean;
     createdAt: Date;
