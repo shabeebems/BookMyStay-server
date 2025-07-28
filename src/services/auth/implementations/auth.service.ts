@@ -73,10 +73,10 @@ export class AuthService implements IAuthService {
         if (user.isBlock) return { success: false, message: Messages.USER_BLOCKED };
 
         const payload = { _id: user._id, email: user.email, role: user.role };
-        await createAccessToken(res, payload);
+        const token = await createAccessToken(res, payload);
         await createRefreshToken(res, payload);
-
-        return { success: true, message: Messages.LOGIN_SUCCESS };
+        console.log(token)
+        return { success: true, message: Messages.LOGIN_SUCCESS, token };
     }
 
     public async forgetPassword({ email, role }: { email: string; role: string }): Promise<ServiceResponse> {

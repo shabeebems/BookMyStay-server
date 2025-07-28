@@ -5,8 +5,9 @@ import authRouter from './routes/auth.routes';
 import connectDB from './config/db';
 import cors from 'cors';
 import session from 'express-session';
-import './utils/passport';  // <-- Add this line (Important!)
+import './utils/passport';
 import googleAuthRouter from './routes/googleAuth.routes';
+import adminRouter from './routes/admin.routes';
 
 dotenv.config();
 connectDB();
@@ -32,6 +33,8 @@ app.use(passport.session());
 
 app.use('/api/auth', authRouter);
 app.use('/api/auth', googleAuthRouter);
+
+app.use('/api/admin', adminRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

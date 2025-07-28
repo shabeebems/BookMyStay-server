@@ -4,6 +4,8 @@ import { IUser } from "../../../models/user.model";
 export type ServiceResponse = {
     success: boolean;
     message: string;
+    data?: IUser[];
+    token?: string;
 };
 
 export interface IAuthService {

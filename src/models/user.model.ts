@@ -29,11 +29,11 @@ const UserSchema: Schema<IUser> = new Schema(
     {
         name: { type: String, required: true, trim: true },
         email: { type: String, required: true, unique: true, lowercase: true, trim: true },
-        mobile: { type: Number, required: true },
-        address: { type: AddressSchema, required: true },
-        password: { type: String, required: true, trim: true },
+        mobile: { type: Number },
+        address: { type: AddressSchema },
+        password: { type: String, trim: true },
         role: { type: String, enum: ['user', 'owner', 'admin'] },
-        isVerified: { type: Boolean },
+        isVerified: { type: Boolean, default: true },
         isBlock: { type: Boolean, default: false }
     },
     { timestamps: true }
