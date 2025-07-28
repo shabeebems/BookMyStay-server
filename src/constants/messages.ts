@@ -17,5 +17,7 @@ export enum Messages {
     RESET_FAILED = "Reset failed or link expired.",
     PASSWORD_RESET_SUCCESS = "Password has been reset successfully.",
 
+    FETCH_USERS_SUCCESS = "Users fetch success.",
+
     INTERNAL_SERVER_ERROR = "Something went wrong. Please try again later.",
 }

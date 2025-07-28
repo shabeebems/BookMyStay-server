@@ -14,4 +14,8 @@ export class UserRepository extends BaseRepository<IUser> {
     async updatePasswordByEmail(email: string, password: string): Promise<void> {
         await this.model.findOneAndUpdate({ email }, { $set: { password } }, { new: true });
     }
+
+    findByRole(role: string): Promise<IUser[]> {
+        return this.model.find({ role });
+    }
 }

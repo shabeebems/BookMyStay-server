@@ -24,11 +24,11 @@ googleAuthRouter.get('/google/callback',
         }
 
         const payload = { _id: loggedUser._id, email: loggedUser.email, role: loggedUser.role };
-        await createAccessToken(res, payload);
+        const token = await createAccessToken(res, payload);
         await createRefreshToken(res, payload);
 
         // Redirect to frontend with token
-        res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${true}`);
+        res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}`);
     }
 );
 
