@@ -13,5 +13,6 @@ authRouter.post('/resend-otp', authController.resendOtp);
 authRouter.post('/login', validate(loginSchema), authController.login);
 authRouter.post('/forgot-password', validate(emailSchema), authController.forgetPassword);
 authRouter.post('/reset-password', authController.resetPassword);
+authRouter.post('/logout', authController.logout);
 
 export default authRouter;

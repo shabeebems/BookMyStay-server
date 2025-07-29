@@ -9,4 +9,9 @@ export class AdminService {
         const users = await this.userRepository.findByRole(role)
         return { success: true, message: Messages.FETCH_USERS_SUCCESS, data: users };
     }
+
+    public async blockUser(_id: string): Promise<ServiceResponse> {
+        await this.userRepository.blockById(_id)
+        return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+    }
 }

@@ -5,7 +5,7 @@ import crypto from "crypto";
 import redis from "../../../config/redis";
 import sendOtp from "../../../utils/sendOtp";
 import sendResetLink from "../../../utils/sendResetLink";
-import { createAccessToken, createRefreshToken } from "../../../utils/jwt";
+import { clearRefreshToken, createAccessToken, createRefreshToken } from "../../../utils/jwt";
 import { IUser } from "../../../models/user.model";
 import { UserRepository } from "../../../repositories/user.repositories";
 import { IAuthService, ServiceResponse } from "../interfaces/auth.interface";
@@ -104,6 +104,11 @@ export class AuthService implements IAuthService {
         await this.userRepository.updatePasswordByEmail(email, hashed);
         await redis.del(`password_reset:${token}`);
 
+        return { success: true, message: Messages.PASSWORD_RESET_SUCCESS };
+    }
+
+    public async logout(res: Response): Promise<ServiceResponse> {
+        await clearRefreshToken(res)
         return { success: true, message: Messages.PASSWORD_RESET_SUCCESS };
     }
 }

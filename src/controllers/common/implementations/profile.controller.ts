@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import { AdminService } from "../../../services/admin/implementations/admin.service";
 import { HttpStatus } from "../../../constants/statusCode";
 import { Messages } from "../../../constants/messages";
+import { CommonService } from "../../../services/common/implementations/common.service";
 
-export class AdminController {
-    private adminService = new AdminService();
+export class CommonController {
+    private commonService = new CommonService();
 
     private async handleRequest<T>(
         res: Response,
@@ -23,10 +24,9 @@ export class AdminController {
     }
 
 
-    public fetchUsers = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.adminService.fetchUsers(req.params.role));
+    public getProfile = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.commonService.getProfile(req));
 
-    public blockUser = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.adminService.blockUser(req.body.userId));
-
+    public updateImage = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.commonService.updateImage(req.body));
 }

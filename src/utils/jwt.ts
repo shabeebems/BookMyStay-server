@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken'
 
 interface TokenPayload {
@@ -35,4 +35,19 @@ export const createRefreshToken = async (res: Response , payload: TokenPayload) 
         sameSite: 'strict',
         path: '/'
     });
+}
+
+export const clearRefreshToken = (res: Response) => {
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        path: '/'
+    });
+};
+
+
+export const decodeToken = async(req: Request): Promise<any> => {
+    const token = req.cookies?.refreshToken;
+    return jwt.decode(token);
 }

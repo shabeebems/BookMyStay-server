@@ -51,4 +51,8 @@ export class AuthController implements IAuthController {
 
     public resetPassword = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.authService.resetPassword(req.body));
+
+    public logout = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.authService.logout(res));
+
 }
