@@ -8,6 +8,8 @@ import session from 'express-session';
 import './utils/passport';
 import googleAuthRouter from './routes/googleAuth.routes';
 import adminRouter from './routes/admin.routes';
+import commonRouter from './routes/common.routes';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 connectDB();
@@ -15,7 +17,10 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(express.json());
+app.use(cookieParser());
+// app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -35,6 +40,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/auth', googleAuthRouter);
 
 app.use('/api/admin', adminRouter);
+app.use('/api', commonRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

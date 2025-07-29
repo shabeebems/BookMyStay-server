@@ -4,7 +4,7 @@ import { IUser } from "../../../models/user.model";
 export type ServiceResponse = {
     success: boolean;
     message: string;
-    data?: IUser[];
+    data?: object | null;
     token?: string;
 };
 
