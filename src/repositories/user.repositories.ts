@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import UserModel, { IUser } from "../models/user.model";
 import { BaseRepository } from "./base.repositories";
 
@@ -33,6 +34,10 @@ export class UserRepository extends BaseRepository<IUser> {
             [{ $set: { isBlock: { $not: "$isBlock" } } }],
             { new: true }
         );
+    }
+
+    updateIsVerified(_id: Types.ObjectId): Promise<IUser | null> {
+        return this.model.findOneAndUpdate({ _id }, { $set: { isVerified: true } });
     }
 
 

@@ -25,4 +25,6 @@ export class OwnerController {
     public verifyDocuments = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.ownerService.verifyDocuments(req.body.documents, req));
 
+    public checkIsVerified = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.checkIsVerified(req, res));
 }

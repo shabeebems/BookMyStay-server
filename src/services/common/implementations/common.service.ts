@@ -2,11 +2,13 @@ import { Request } from "express";
 // import { UserRepository } from "../../../repositories/user.repositories";
 import { decodeToken } from "../../../utils/jwt";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
-import { UserRepository } from "../../../repositories/user.repositories";
 import CloudinaryV2 from "../../../utils/claudinary";
+import { UserRepository } from "../../../repositories/user.repositories";
+import { NotificationRepository } from "../../../repositories/notification.repositories";
 
 export class CommonService {
     private userRepository = new UserRepository();
+    private notificationRepository = new NotificationRepository();
 
     public async getProfile(req: Request): Promise<ServiceResponse> {
         const decodeUser = await decodeToken(req)
@@ -30,5 +32,11 @@ export class CommonService {
             return { success: true, message: "Profile fetch success" };
             
         }
+    }
+
+    public async getNotifications(req: Request): Promise<ServiceResponse> {
+        const decodeUser = await decodeToken(req)
+        const notification = await this.notificationRepository.findAllByUserId(decodeUser?._id)
+        return { success: true, message: "Profile fetch success", data: notification };
     }
 }

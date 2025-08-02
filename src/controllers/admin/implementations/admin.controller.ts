@@ -29,4 +29,9 @@ export class AdminController {
     public blockUser = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.adminService.blockUser(req.body.userId));
 
+    public notification = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.adminService.notification());
+
+    public updateNotificationStatus = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.adminService.updateNotificationStatus(req));
 }

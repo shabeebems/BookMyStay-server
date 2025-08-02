@@ -6,5 +6,6 @@ const ownerRouter: Router = Router();
 const ownerController = new OwnerController();
 
 ownerRouter.put('/verify-documents', ownerController.verifyDocuments);
+ownerRouter.get('/check_isVerified', ownerController.checkIsVerified);
 
 export default ownerRouter;

@@ -29,4 +29,7 @@ export class CommonController {
 
     public updateImage = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.commonService.updateImage(req.body));
+
+    public getNotifications = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.commonService.getNotifications(req));
 }

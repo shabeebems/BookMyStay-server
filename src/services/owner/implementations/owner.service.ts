@@ -1,12 +1,14 @@
 import { Request } from "express";
 import { Messages } from "../../../constants/messages";
-import { UserRepository } from "../../../repositories/user.repositories";
 import CloudinaryV2 from "../../../utils/claudinary";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
-import { decodeToken } from "../../../utils/jwt";
+import { clearRefreshToken, decodeToken } from "../../../utils/jwt";
+import { UserRepository } from "../../../repositories/user.repositories";
+import { NotificationRepository } from "../../../repositories/notification.repositories";
 
 export class OwnerService {
     private userRepository = new UserRepository();
+    private notificationRepository = new NotificationRepository();
 
     public async verifyDocuments(documents: string[], req: Request): Promise<ServiceResponse> {
         let uploadedImages: string[] = [];
@@ -17,11 +19,26 @@ export class OwnerService {
             });
             uploadedImages.push(result.secure_url);  // Push uploaded image URL
         }
-        console.log(uploadedImages)
-        
         const decodeUser = await decodeToken(req)
-        const user = await this.userRepository.updateDocumentsById(decodeUser._id, uploadedImages)
+        const newNotification = {
+            userId: decodeUser._id,
+            title: "Request for Registration",
+            message: "New owner has submitted verification documents.",
+            documents: uploadedImages,
+            ownerId: decodeUser._id
+        }
+        const notification = await this.notificationRepository.create(newNotification)
 
         return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+    }
+
+    public async checkIsVerified(req: Request, res: any): Promise<ServiceResponse> {
+        const decodeUser = await decodeToken(req)
+        const user = await this.userRepository.findById(decodeUser._id)
+        if(user?.isVerified) {
+            clearRefreshToken(res)
+            return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+        }
+        return { success: false, message: Messages.FETCH_USERS_SUCCESS };
     }
 }
