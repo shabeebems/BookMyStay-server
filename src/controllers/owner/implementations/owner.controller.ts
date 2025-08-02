@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import { AdminService } from "../../../services/admin/implementations/admin.service";
 import { HttpStatus } from "../../../constants/statusCode";
 import { Messages } from "../../../constants/messages";
-import { CommonService } from "../../../services/common/implementations/common.service";
+import { OwnerService } from "../../../services/owner/implementations/owner.service";
 
-export class CommonController {
-    private commonService = new CommonService();
+export class OwnerController {
+    private ownerService = new OwnerService();
 
     private async handleRequest<T>(
         res: Response,
@@ -23,13 +22,9 @@ export class CommonController {
         }
     }
 
+    public verifyDocuments = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.verifyDocuments(req.body.documents, req));
 
-    public getProfile = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.commonService.getProfile(req));
-
-    public updateImage = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.commonService.updateImage(req.body));
-
-    public getNotifications = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.commonService.getNotifications(req));
+    public checkIsVerified = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.checkIsVerified(req, res));
 }

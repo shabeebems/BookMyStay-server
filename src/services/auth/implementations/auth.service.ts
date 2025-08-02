@@ -72,10 +72,10 @@ export class AuthService implements IAuthService {
         if (!(await bcrypt.compare(data.password, user.password))) return { success: false, message: Messages.PASSWORD_INCORRECT };
         if (user.isBlock) return { success: false, message: Messages.USER_BLOCKED };
 
-        const payload = { _id: user._id, email: user.email, role: user.role };
+        const { _id, email, role, isVerified } = user
+        const payload = { _id, email, role, isVerified };
         const token = await createAccessToken(res, payload);
         await createRefreshToken(res, payload);
-        console.log(token)
         return { success: true, message: Messages.LOGIN_SUCCESS, token };
     }
 
