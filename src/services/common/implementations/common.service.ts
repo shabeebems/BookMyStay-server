@@ -16,7 +16,6 @@ export class CommonService {
 
     public async updateImage(data: { image: string, userId: string }): Promise<ServiceResponse> {
         try {
-            console.log(data)
             const { image, userId } = data
             // Upload image to cloudinary
             let result = await CloudinaryV2.uploader.upload(image, {

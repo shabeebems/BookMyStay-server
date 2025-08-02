@@ -23,10 +23,14 @@ export class UserRepository extends BaseRepository<IUser> {
         return await this.model.findOneAndUpdate({ _id }, { $set: { image } });
     }
 
+    async updateDocumentsById(_id: string, documents: string[]): Promise<IUser | null> {
+        return await this.model.findOneAndUpdate({ _id }, { $set: { documents } });
+    }
+
     async blockById(_id: string): Promise<IUser | null> {
         return this.model.findByIdAndUpdate(
             _id,
-            [{ $set: { isBlocked: { $not: "$isBlocked" } } }],
+            [{ $set: { isBlock: { $not: "$isBlock" } } }],
             { new: true }
         );
     }

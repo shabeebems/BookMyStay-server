@@ -10,6 +10,7 @@ import googleAuthRouter from './routes/googleAuth.routes';
 import adminRouter from './routes/admin.routes';
 import commonRouter from './routes/common.routes';
 import cookieParser from 'cookie-parser';
+import ownerRouter from './routes/owner.routes';
 
 dotenv.config();
 connectDB();
@@ -40,6 +41,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/auth', googleAuthRouter);
 
 app.use('/api/admin', adminRouter);
+app.use('/api/owner', ownerRouter);
 app.use('/api', commonRouter);
 
 app.listen(PORT, () => {

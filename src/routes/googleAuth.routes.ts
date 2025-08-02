@@ -23,7 +23,7 @@ googleAuthRouter.get('/google/callback',
             loggedUser = await userRepository.create(newUser)
         }
 
-        const payload = { _id: loggedUser._id, email: loggedUser.email, role: loggedUser.role };
+        const payload = { _id: loggedUser._id, email: loggedUser.email, role: loggedUser.role, isVerified: true };
         const token = await createAccessToken(res, payload);
         await createRefreshToken(res, payload);
 
