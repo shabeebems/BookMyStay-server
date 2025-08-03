@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { AdminController } from "../controllers/admin/implementations/admin.controller";
+import { authenticateToken } from "../middlewares/tokenValidation";
 
 const adminRouter: Router = Router();
 
 const adminController = new AdminController();
 
-adminRouter.get('/users/:role', adminController.fetchUsers);
-adminRouter.put('/user', adminController.blockUser);
-adminRouter.get('/notification', adminController.notification);
-adminRouter.put('/notification/:notificationId', adminController.updateNotificationStatus);
+adminRouter.get('/users/:role', authenticateToken(['admin']), adminController.fetchUsers);
+adminRouter.put('/user', authenticateToken(['admin']), adminController.blockUser);
+adminRouter.get('/notification', authenticateToken(['admin']), adminController.notification);
+adminRouter.put('/notification/:notificationId', authenticateToken(['admin']), adminController.updateNotificationStatus);
 
 export default adminRouter;
