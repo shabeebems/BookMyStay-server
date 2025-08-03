@@ -46,6 +46,15 @@ export const clearRefreshToken = (res: Response) => {
     });
 };
 
+export const clearAccessToken = (res: Response) => {
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'strict',
+        path: '/'
+    });
+};
+
 
 export const decodeToken = async(req: Request): Promise<any> => {
     const token = req.cookies?.refreshToken;

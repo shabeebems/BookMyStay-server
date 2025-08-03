@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import UserModel, { IUser } from "../models/user.model";
 import { BaseRepository } from "./base.repositories";
+import jwt from "jsonwebtoken";
 
 export class UserRepository extends BaseRepository<IUser> {
 
@@ -38,6 +39,11 @@ export class UserRepository extends BaseRepository<IUser> {
 
     updateIsVerified(_id: Types.ObjectId): Promise<IUser | null> {
         return this.model.findOneAndUpdate({ _id }, { $set: { isVerified: true } });
+    }
+
+    public findUserByToken = async (token: string, jwtSecret: string): Promise<IUser | null> => {
+        const verify: any = jwt.verify(token, jwtSecret);
+        return await this.findByEmail(verify.email)
     }
 
 
