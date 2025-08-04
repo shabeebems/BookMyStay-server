@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AuthController } from "../controllers/auth/implementations/auth.controller";
+import { AuthController } from "../controllers/auth/auth.controller";
 import { emailSchema, loginSchema, registerSchema } from "../schemas/user.schema";
 import { validate } from "../middlewares/zodValidate";
 

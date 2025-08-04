@@ -1,30 +1,36 @@
 export enum Messages {
-    EMAIL_EXISTS = "Email already exists",
-    USER_REGISTERED = "User registration initiated. OTP sent to your email.",
 
-    OTP_VERIFIED = "✅ OTP verified successfully. You can now log in.",
-    OTP_INVALID = "❌ Invalid OTP. Please try again.",
-    OTP_EXPIRED = "⏰ OTP has expired. Please fill the registration form again.",
-    OTP_RESENT = "📩 A new OTP has been sent to your email.",
-    OTP_NOT_FOUND = "No active OTP session found.",
+  // Registration
+  EMAIL_EXISTS = "❌ An account with this email already exists.",
+  USER_REGISTERED = "📩 Registration initiated. An OTP has been sent to your email.",
 
-    LOGIN_SUCCESS = "Login successful.",
-    PASSWORD_INCORRECT = "Incorrect password.",
-    USER_BLOCKED = "User is blocked.",
-    USER_NOT_FOUND = "No account found with this email.",
+  // OTP Messages
+  OTP_VERIFIED = "✅ OTP verified successfully. You can now log in.",
+  OTP_INVALID = "❌ The OTP you entered is invalid. Please try again.",
+  OTP_EXPIRED = "⏰ The OTP has expired. Please complete the registration form again.",
+  OTP_RESENT = "📩 A new OTP has been sent to your email address.",
+  OTP_NOT_FOUND = "❌ No active OTP session found. Please initiate registration again.",
 
-    RESET_LINK_SENT = "Password reset link sent to your email.",
-    RESET_FAILED = "Reset failed or link expired.",
-    PASSWORD_RESET_SUCCESS = "Password has been reset successfully.",
+  // Login Messages
+  LOGIN_SUCCESS = "✅ Logged in successfully.",
+  PASSWORD_INCORRECT = "❌ The password you entered is incorrect.",
+  USER_BLOCKED = "❌ This account has been blocked. Please contact support.",
+  USER_NOT_FOUND = "❌ No account found with the provided email address.",
 
-    FETCH_USERS_SUCCESS = "Users fetch success.",
+  // Password Reset Messages
+  RESET_LINK_SENT = "📩 A password reset link has been sent to your email.",
+  RESET_FAILED = "❌ Password reset failed or the link has expired.",
+  PASSWORD_RESET_SUCCESS = "✅ Your password has been reset successfully.",
 
-    INTERNAL_SERVER_ERROR = "Something went wrong. Please try again later.",
+  // Data Fetch Messages
+  FETCH_USERS_SUCCESS = "✅ Users retrieved successfully.",
 
-      // Tokens
-    ACCESS_TOKEN_INVALID = 'Access token verification failed',
-    REFRESH_TOKEN_INVALID = 'Refresh token verification failed',
-    NO_TOKEN = 'No tokens found in the request',
-    UNAUTHORIZED_ACCESS = "You are not authorized to access this resource."
+  // Server & Error Messages
+  INTERNAL_SERVER_ERROR = "❌ An internal server error occurred. Please try again later.",
 
+  // Token & Authorization Messages
+  ACCESS_TOKEN_INVALID = "❌ Access token verification failed.",
+  REFRESH_TOKEN_INVALID = "❌ Refresh token verification failed.",
+  NO_TOKEN = "❌ No authentication tokens found in the request.",
+  UNAUTHORIZED_ACCESS = "❌ You are not authorized to access this resource."
 }

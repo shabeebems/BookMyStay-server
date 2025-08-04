@@ -1,14 +1,8 @@
 import { Request, Response } from "express";
-import { IAuthController } from "../interfaces/auth.interface";
-import { AuthService } from "../../../services/auth/implementations/auth.service";
-import { HttpStatus } from "../../../constants/statusCode";
-import { Messages } from "../../../constants/messages";
-
-interface ResponsePayload {
-    success: boolean;
-    message: string;
-    [key: string]: any;
-}
+import { IAuthController, ResponsePayload } from "./auth.interface";
+import { AuthService } from "../../services/auth/implementations/auth.service";
+import { HttpStatus } from "../../constants/statusCode";
+import { Messages } from "../../constants/messages";
 
 export class AuthController implements IAuthController {
     private authService = new AuthService();

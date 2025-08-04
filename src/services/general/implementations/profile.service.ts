@@ -3,12 +3,11 @@ import { decodeToken } from "../../../utils/jwt";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
 import CloudinaryV2 from "../../../utils/claudinary";
 import { UserRepository } from "../../../repositories/user.repositories";
-import { NotificationRepository } from "../../../repositories/notification.repositories";
 import bcrypt from "bcrypt";
+import { IProfileService } from "../interfaces/profile.interface";
 
-export class CommonService {
+export class ProfileService implements IProfileService {
     private userRepository = new UserRepository();
-    private notificationRepository = new NotificationRepository();
 
     public async getProfile(req: Request): Promise<ServiceResponse> {
         const decodeUser = await decodeToken(req)
@@ -30,14 +29,7 @@ export class CommonService {
         } catch (error) {
             console.log(error)
             return { success: true, message: "Profile fetch success" };
-            
         }
-    }
-
-    public async getNotifications(req: Request): Promise<ServiceResponse> {
-        const decodeUser = await decodeToken(req)
-        const notification = await this.notificationRepository.findAllByUserId(decodeUser?._id)
-        return { success: true, message: "Profile fetch success", data: notification };
     }
 
     public async changePassword(req: Request): Promise<ServiceResponse> {
