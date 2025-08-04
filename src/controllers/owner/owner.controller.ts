@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { HttpStatus } from "../../../constants/statusCode";
-import { Messages } from "../../../constants/messages";
-import { OwnerService } from "../../../services/owner/implementations/owner.service";
+import { HttpStatus } from "../../constants/statusCode";
+import { Messages } from "../../constants/messages";
+import { OwnerService } from "../../services/owner/implementations/owner.service";
+import { IOwnerController } from "./owner.interface";
 
-export class OwnerController {
+export class OwnerController implements IOwnerController {
     private ownerService = new OwnerService();
 
     private async handleRequest<T>(
@@ -22,9 +23,6 @@ export class OwnerController {
         }
     }
 
-    public verifyDocuments = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.ownerService.verifyDocuments(req.body.documents, req));
-
-    public checkIsVerified = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.ownerService.checkIsVerified(req, res));
+    public uploadOwnerDocuments = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.uploadOwnerDocuments(req.body.documents, req));
 }

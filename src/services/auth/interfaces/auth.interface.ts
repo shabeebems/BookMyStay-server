@@ -15,4 +15,5 @@ export interface IAuthService {
     login(res: Response, data: { email: string; password: string; role: string }): Promise<ServiceResponse>;
     forgetPassword(data: { email: string; role: string }): Promise<ServiceResponse>;
     resetPassword(data: { token: string; password: string }): Promise<ServiceResponse>;
+    logout(res: Response): Promise<ServiceResponse>;
 }

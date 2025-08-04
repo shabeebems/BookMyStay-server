@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
-import { AdminService } from "../../../services/admin/implementations/admin.service";
-import { HttpStatus } from "../../../constants/statusCode";
-import { Messages } from "../../../constants/messages";
+import { NotificationService } from "../../services/admin/implementations/notification.service";
+import { HttpStatus } from "../../constants/statusCode";
+import { Messages } from "../../constants/messages";
+import { UserService } from "../../services/admin/implementations/user.service";
+import { IAdminController } from ".//admin.interface";
 
-export class AdminController {
-    private adminService = new AdminService();
+export class AdminController implements IAdminController {
+    private notificationService = new NotificationService();
+    private userService = new UserService();
 
     private async handleRequest<T>(
         res: Response,
@@ -24,14 +27,14 @@ export class AdminController {
 
 
     public fetchUsers = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.adminService.fetchUsers(req.params.role));
+        this.handleRequest(res, () => this.userService.fetchUsers(req.params.role));
 
     public blockUser = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.adminService.blockUser(req.body.userId));
+        this.handleRequest(res, () => this.userService.blockUser(req.body.userId));
 
     public notification = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.adminService.notification());
+        this.handleRequest(res, () => this.notificationService.notification());
 
     public updateNotificationStatus = (req: Request, res: Response): Promise<void> =>
-        this.handleRequest(res, () => this.adminService.updateNotificationStatus(req));
+        this.handleRequest(res, () => this.notificationService.updateNotificationStatus(req));
 }

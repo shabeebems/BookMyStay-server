@@ -30,8 +30,10 @@ export const authenticateToken = (allowedRoles: string[]) => {
                 }
 
                 const userDetails: any = await userSchema.findUserByToken(accessToken, ACCESS_TOKEN_SECRET || '')
+                const decodedUser: any = jwt.verify(accessToken, ACCESS_TOKEN_SECRET || "");
                 
-                if(userDetails.is_block) {
+                // console.log()
+                if(userDetails.is_block || (userDetails.isVerified === true && decodedUser.isVerified === false)) {
                     
                     // If user blocked, delete access and refresh token
                     clearAccessToken(res)
@@ -46,7 +48,6 @@ export const authenticateToken = (allowedRoles: string[]) => {
                 }
 
                 if(!allowedRoles.includes(userDetails.role)) {
-                    console.log('ew')
                     res.status(403).json({
                         success: false,
                         message: Messages.UNAUTHORIZED_ACCESS

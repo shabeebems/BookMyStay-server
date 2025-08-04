@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AdminController } from "../controllers/admin/implementations/admin.controller";
+import { AdminController } from "../controllers/admin/admin.controller";
 import { authenticateToken } from "../middlewares/tokenValidation";
 
 const adminRouter: Router = Router();

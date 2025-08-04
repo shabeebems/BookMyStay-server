@@ -1,16 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import authRouter from './routes/auth.routes';
 import connectDB from './config/db';
 import cors from 'cors';
 import session from 'express-session';
 import './utils/passport';
-import googleAuthRouter from './routes/googleAuth.routes';
-import adminRouter from './routes/admin.routes';
-import commonRouter from './routes/common.routes';
 import cookieParser from 'cookie-parser';
+import authRouter from './routes/auth.routes';
+import adminRouter from './routes/admin.routes';
 import ownerRouter from './routes/owner.routes';
+import generalRouter from './routes/general.routes';
+import googleAuthRouter from './routes/googleAuth.routes';
 
 dotenv.config();
 connectDB();
@@ -42,7 +42,7 @@ app.use('/api/auth', googleAuthRouter);
 
 app.use('/api/admin', adminRouter);
 app.use('/api/owner', ownerRouter);
-app.use('/api', commonRouter);
+app.use('/api', generalRouter);
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);
