@@ -32,4 +32,8 @@ export class CommonController {
 
     public getNotifications = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.commonService.getNotifications(req));
+
+    public changePassword = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.commonService.changePassword(req));
+
 }

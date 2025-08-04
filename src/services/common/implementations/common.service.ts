@@ -1,10 +1,10 @@
 import { Request } from "express";
-// import { UserRepository } from "../../../repositories/user.repositories";
 import { decodeToken } from "../../../utils/jwt";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
 import CloudinaryV2 from "../../../utils/claudinary";
 import { UserRepository } from "../../../repositories/user.repositories";
 import { NotificationRepository } from "../../../repositories/notification.repositories";
+import bcrypt from "bcrypt";
 
 export class CommonService {
     private userRepository = new UserRepository();
@@ -38,5 +38,17 @@ export class CommonService {
         const decodeUser = await decodeToken(req)
         const notification = await this.notificationRepository.findAllByUserId(decodeUser?._id)
         return { success: true, message: "Profile fetch success", data: notification };
+    }
+
+    public async changePassword(req: Request): Promise<ServiceResponse> {
+        const { oldPassword, newPassword } = req.body
+        
+        const decodeUser = await decodeToken(req)
+        const user = await this.userRepository.findById(decodeUser?._id)
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        await this.userRepository.updatePasswordByEmail(decodeUser?.email, hashedPassword)
+
+        return { success: true, message: "password update success", data: user };
     }
 }

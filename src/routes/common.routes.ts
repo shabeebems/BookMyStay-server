@@ -9,5 +9,6 @@ const commonController = new CommonController()
 commonRouter.get('/profile', authenticateToken(['owner', 'user']), commonController.getProfile);
 commonRouter.put('/profile', authenticateToken(['owner', 'user']), commonController.updateImage);
 commonRouter.get('/notification', authenticateToken(['owner', 'user']), commonController.getNotifications);
+commonRouter.post('/change-password', authenticateToken(['owner', 'user']), commonController.changePassword);
 
 export default commonRouter;
