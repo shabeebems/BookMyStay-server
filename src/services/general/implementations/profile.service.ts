@@ -18,7 +18,6 @@ export class ProfileService implements IProfileService {
     public async updateProfile(req: Request): Promise<ServiceResponse> {
         const decodeUser = await decodeToken(req)
         await this.userRepository.updateProfile(decodeUser?._id, req.body)
-        // console.log(decodeUser._id)
         return { success: true, message: "Profile fetch success" };
     }
 
