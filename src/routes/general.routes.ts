@@ -8,10 +8,10 @@ const generalRouter: Router = Router();
 
 const generalController = new GeneralController()
 
-generalRouter.get('/profile', authenticateToken(['owner', 'user']), generalController.getProfile);
-generalRouter.post('/profile', validate(profileUpdateSchema), authenticateToken(['owner', 'user']), generalController.updateProfile);
-generalRouter.put('/profile', authenticateToken(['owner', 'user']), generalController.updateImage);
+generalRouter.get('/profile', authenticateToken(['owner', 'user', 'admin']), generalController.getProfile);
+generalRouter.post('/profile', validate(profileUpdateSchema), authenticateToken(['owner', 'user', 'admin']), generalController.updateProfile);
+generalRouter.put('/profile', authenticateToken(['owner', 'user', 'admin']), generalController.updateImage);
 generalRouter.get('/notification', authenticateToken(['owner', 'user']), generalController.getNotifications);
-generalRouter.post('/change-password', authenticateToken(['owner', 'user']), generalController.changePassword);
+generalRouter.post('/change-password', authenticateToken(['owner', 'user', 'admin']), generalController.changePassword);
 
 export default generalRouter;

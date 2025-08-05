@@ -48,6 +48,8 @@ export class ProfileService implements IProfileService {
         if(oldPassword.length && user) {
             const checkPassword = (await bcrypt.compare(oldPassword, user.password))
             if(!checkPassword) return { success: false, message: "incorrect old password" };
+        } else if(user?.password) {
+            return { success: false, message: "Enter old password" };
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
