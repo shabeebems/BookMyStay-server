@@ -24,7 +24,7 @@ export class NotificationService implements INotificationService {
 
         if(!notification) return { success: false, message: Messages.FETCH_USERS_SUCCESS };
         if(req.body.requestStatus === "accepted") {
-            await this.userRepository.updateIsVerified(notification.userId)
+            await this.userRepository.updateIsVerified(notification.userId, notification.documents)
         }
         
         return { success: true, message: Messages.FETCH_USERS_SUCCESS };
