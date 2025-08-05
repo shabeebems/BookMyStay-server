@@ -37,8 +37,8 @@ export class UserRepository extends BaseRepository<IUser> {
         );
     }
 
-    updateIsVerified(_id: Types.ObjectId): Promise<IUser | null> {
-        return this.model.findOneAndUpdate({ _id }, { $set: { isVerified: true } });
+    updateIsVerified(_id: Types.ObjectId, documents: string[]): Promise<IUser | null> {
+        return this.model.findOneAndUpdate({ _id }, { $set: { isVerified: true, documents } });
     }
 
     public findUserByToken = async (token: string, jwtSecret: string): Promise<IUser | null> => {
@@ -46,5 +46,8 @@ export class UserRepository extends BaseRepository<IUser> {
         return await this.findByEmail(verify.email)
     }
 
-
+    async updateProfile(_id: Types.ObjectId, data: object): Promise<IUser | null> {
+        return await this.model.findOneAndUpdate({ _id }, { $set: { ...data } });
+    }
+    
 }

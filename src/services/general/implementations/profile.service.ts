@@ -15,6 +15,13 @@ export class ProfileService implements IProfileService {
         return { success: true, message: "Profile fetch success", data: user };
     }
 
+    public async updateProfile(req: Request): Promise<ServiceResponse> {
+        const decodeUser = await decodeToken(req)
+        await this.userRepository.updateProfile(decodeUser?._id, req.body)
+        // console.log(decodeUser._id)
+        return { success: true, message: "Profile fetch success" };
+    }
+
     public async updateImage(data: { image: string, userId: string }): Promise<ServiceResponse> {
         try {
             const { image, userId } = data
@@ -37,6 +44,13 @@ export class ProfileService implements IProfileService {
         
         const decodeUser = await decodeToken(req)
         const user = await this.userRepository.findById(decodeUser?._id)
+
+        if(oldPassword.length && user) {
+            const checkPassword = (await bcrypt.compare(oldPassword, user.password))
+            if(!checkPassword) return { success: false, message: "incorrect old password" };
+        } else if(user?.password) {
+            return { success: false, message: "Enter old password" };
+        }
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         await this.userRepository.updatePasswordByEmail(decodeUser?.email, hashedPassword)

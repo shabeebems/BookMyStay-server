@@ -23,6 +23,10 @@ googleAuthRouter.get('/google/callback',
             loggedUser = await userRepository.create(newUser)
         }
 
+        if(loggedUser.isBlock) {
+            return res.redirect(`${process.env.FRONTEND_URL}/auth-failed?error=User is Blocked`);
+        }
+
         const payload = { _id: loggedUser._id, email: loggedUser.email, role: loggedUser.role, isVerified: true };
         const token = await createAccessToken(res, payload);
         await createRefreshToken(res, payload);
