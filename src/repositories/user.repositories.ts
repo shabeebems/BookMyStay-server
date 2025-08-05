@@ -46,5 +46,8 @@ export class UserRepository extends BaseRepository<IUser> {
         return await this.findByEmail(verify.email)
     }
 
-
+    async updateProfile(_id: Types.ObjectId, data: object): Promise<IUser | null> {
+        return await this.model.findOneAndUpdate({ _id }, { $set: { ...data } });
+    }
+    
 }

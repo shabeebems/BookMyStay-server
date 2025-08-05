@@ -32,6 +32,9 @@ export class GeneralController implements IGeneralController {
     public updateImage = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.profileService.updateImage(req.body));
 
+    public updateProfile = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.profileService.updateProfile(req));
+
     public changePassword = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.profileService.changePassword(req));
     
