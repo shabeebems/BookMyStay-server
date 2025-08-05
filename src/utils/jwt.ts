@@ -57,6 +57,7 @@ export const clearAccessToken = (res: Response) => {
 
 
 export const decodeToken = async(req: Request): Promise<any> => {
-    const token = req.cookies?.refreshToken;
+    const token = req.cookies?.accessToken;
+    if(!token) return req.user
     return jwt.decode(token);
 }

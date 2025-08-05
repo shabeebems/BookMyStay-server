@@ -73,6 +73,7 @@ export class AuthService implements IAuthService {
         if (user.isBlock) return { success: false, message: Messages.USER_BLOCKED };
 
         const { _id, email, role, isVerified } = user
+        console.log(user)
         const payload = { _id, email, role, isVerified };
         const token = await createAccessToken(res, payload);
         await createRefreshToken(res, payload);
