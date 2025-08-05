@@ -38,6 +38,11 @@ export class ProfileService implements IProfileService {
         const decodeUser = await decodeToken(req)
         const user = await this.userRepository.findById(decodeUser?._id)
 
+        if(oldPassword.length && user) {
+            const checkPassword = (await bcrypt.compare(oldPassword, user.password))
+            if(!checkPassword) return { success: false, message: "incorrect old password" };
+        }
+
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         await this.userRepository.updatePasswordByEmail(decodeUser?.email, hashedPassword)
 

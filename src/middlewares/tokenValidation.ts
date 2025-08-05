@@ -32,8 +32,7 @@ export const authenticateToken = (allowedRoles: string[]) => {
                 const userDetails: any = await userSchema.findUserByToken(accessToken, ACCESS_TOKEN_SECRET || '')
                 const decodedUser: any = jwt.verify(accessToken, ACCESS_TOKEN_SECRET || "");
                 
-                // console.log()
-                if(userDetails.is_block || (userDetails.isVerified === true && decodedUser.isVerified === false)) {
+                if(userDetails.isBlock || (userDetails.isVerified === true && decodedUser.isVerified === false)) {
                     
                     // If user blocked, delete access and refresh token
                     clearAccessToken(res)
@@ -82,8 +81,9 @@ export const authenticateToken = (allowedRoles: string[]) => {
                         // Creating new access Token
                         // Finding user details by refresh token to payload for create access token
                         const userDetails: any = await userSchema.findUserByToken(refreshToken, REFRESH_TOKEN_SECRET || '')
-                        
-                        if(userDetails.is_block) {
+                        const decodedUser: any = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET || "");
+            
+                        if(userDetails.isBlock || (userDetails.isVerified === true && decodedUser.isVerified === false)) {
 
                             // If user blocked, delete refresh token
                             clearRefreshToken(res)
