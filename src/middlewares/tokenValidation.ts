@@ -1,7 +1,7 @@
 import { Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { createAccessToken, clearRefreshToken, clearAccessToken } from "../utils/jwt";
-import { UserRepository } from "../repositories/user.repositories";
+import { UserRepository } from "../repositories/implementations/user.repositories";
 import { Messages } from "../constants/messages";
 
 const userSchema = new UserRepository()

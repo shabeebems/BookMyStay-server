@@ -2,7 +2,7 @@ import { Request } from "express";
 import { decodeToken } from "../../../utils/jwt";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
 import CloudinaryV2 from "../../../utils/claudinary";
-import { UserRepository } from "../../../repositories/user.repositories";
+import { UserRepository } from "../../../repositories/implementations/user.repositories";
 import bcrypt from "bcrypt";
 import { IProfileService } from "../interfaces/profile.interface";
 
@@ -17,7 +17,7 @@ export class ProfileService implements IProfileService {
 
     public async updateProfile(req: Request): Promise<ServiceResponse> {
         const decodeUser = await decodeToken(req)
-        await this.userRepository.updateProfile(decodeUser?._id, req.body)
+        await this.userRepository.updateById(decodeUser?._id, req.body)
         return { success: true, message: "Profile fetch success" };
     }
 

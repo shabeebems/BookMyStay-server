@@ -1,8 +1,8 @@
 import { Request } from "express";
 import { decodeToken } from "../../../utils/jwt";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
-import { NotificationRepository } from "../../../repositories/notification.repositories";
 import { INotificationService } from "../interfaces/notification.interface";
+import { NotificationRepository } from "../../../repositories/implementations/notification.repositories";
 
 export class NotificationService implements INotificationService {
     private notificationRepository = new NotificationRepository();

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { UserRepository } from "../repositories/user.repositories";
+import { UserRepository } from "../repositories/implementations/user.repositories";
 import { createAccessToken, createRefreshToken } from "../utils/jwt";
 
 const googleAuthRouter: Router = Router();

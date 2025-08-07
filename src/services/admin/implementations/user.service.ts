@@ -1,5 +1,5 @@
 import { Messages } from "../../../constants/messages";
-import { UserRepository } from "../../../repositories/user.repositories";
+import { UserRepository } from "../../../repositories/implementations/user.repositories";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
 import { IUserService } from "../interfaces/user.interface";
 
