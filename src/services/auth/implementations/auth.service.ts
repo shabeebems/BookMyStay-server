@@ -7,7 +7,7 @@ import sendOtp from "../../../utils/sendOtp";
 import sendResetLink from "../../../utils/sendResetLink";
 import { clearAccessToken, clearRefreshToken, createAccessToken, createRefreshToken } from "../../../utils/jwt";
 import { IUser } from "../../../models/user.model";
-import { UserRepository } from "../../../repositories/user.repositories";
+import { UserRepository } from "../../../repositories/implementations/user.repositories";
 import { IAuthService, ServiceResponse } from "../interfaces/auth.interface";
 import { Messages } from "../../../constants/messages";
 

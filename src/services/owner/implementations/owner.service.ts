@@ -3,9 +3,9 @@ import { Messages } from "../../../constants/messages";
 import CloudinaryV2 from "../../../utils/claudinary";
 import { ServiceResponse } from "../../auth/interfaces/auth.interface";
 import { decodeToken } from "../../../utils/jwt";
-import { NotificationRepository } from "../../../repositories/notification.repositories";
 import { IOwnerService } from "../interfaces/owner.interface";
-import { UserRepository } from "../../../repositories/user.repositories";
+import { UserRepository } from "../../../repositories/implementations/user.repositories";
+import { NotificationRepository } from "../../../repositories/implementations/notification.repositories";
 
 export class OwnerService implements IOwnerService {
     private notificationRepository = new NotificationRepository();
