@@ -25,4 +25,11 @@ export class OwnerController implements IOwnerController {
 
     public uploadOwnerDocuments = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.ownerService.uploadOwnerDocuments(req.body.documents, req));
+
+    public addHotel = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.addHotel(req));
+
+    public fetchHotels = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.fetchHotels(req));
+
 }
