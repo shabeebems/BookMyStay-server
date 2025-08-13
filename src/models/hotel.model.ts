@@ -8,7 +8,6 @@ export interface IHotel extends Document {
     documents: string[];
     facilities: string[];
     description: string;
-    isVerified: boolean;
     isBlock: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -22,7 +21,6 @@ const HotelSchema: Schema<IHotel> = new Schema(
         documents: { type: [String], default: [] },
         facilities: { type: [String], default: [] },
         description: { type: String, required: true, trim: true },
-        isVerified: { type: Boolean, default: false },
         isBlock: { type: Boolean, default: false }
     },
     { timestamps: true }

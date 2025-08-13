@@ -15,4 +15,11 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     
     updateById = (_id: Types.ObjectId | string, data: object): Promise<T | null> =>
         this.model.findOneAndUpdate({ _id }, { $set: { ...data } });
+
+    blockById = (_id: string): Promise<T | null> =>
+        this.model.findByIdAndUpdate(
+            _id,
+            [{ $set: { isBlock: { $not: "$isBlock" } } }],
+            { new: true }
+        );
 }

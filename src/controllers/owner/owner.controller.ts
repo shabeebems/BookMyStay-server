@@ -34,4 +34,7 @@ export class OwnerController implements IOwnerController {
 
     public updateHotel = (req: Request, res: Response): Promise<void> =>
         this.handleRequest(res, () => this.ownerService.updateHotel(req));
+
+    public blockHotel = (req: Request, res: Response): Promise<void> =>
+        this.handleRequest(res, () => this.ownerService.blockHotel(req));
 }
