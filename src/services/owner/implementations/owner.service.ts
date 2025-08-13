@@ -88,5 +88,33 @@ export class OwnerService implements IOwnerService {
             
         }
     }
+
+    public async updateHotel(req: Request): Promise<ServiceResponse> {
+        try {
+            const { images, name, facilities, description } = req.body
+            
+            let uploadedImages: string[] = [];
+            
+            for (let base64Image of images) {
+                const result = await CloudinaryV2.uploader.upload(base64Image, {
+                    folder: `BookMyStay/hotel`,
+                });
+                uploadedImages.push(result.secure_url);  // Push uploaded image URL
+            }
+            
+            const updatingHotel = {
+                name, facilities, description,
+                images: uploadedImages,
+            };
+            
+            await this.hotelRepository.updateById(req.params.hotelId, updatingHotel)
+            
+            return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+        } catch (error) {
+            console.log(error)
+            return { success: false, message: Messages.FETCH_USERS_SUCCESS };
+            
+        }
+    }
     
 }

@@ -13,6 +13,6 @@ export abstract class BaseRepository<T> implements IBaseRepository<T> {
     findAll = (): Promise<T[]> =>
         this.model.find();
     
-    updateById = (_id: Types.ObjectId, data: object): Promise<T | null> =>
+    updateById = (_id: Types.ObjectId | string, data: object): Promise<T | null> =>
         this.model.findOneAndUpdate({ _id }, { $set: { ...data } });
 }
