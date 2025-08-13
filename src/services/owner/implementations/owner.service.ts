@@ -117,4 +117,8 @@ export class OwnerService implements IOwnerService {
         }
     }
     
+    public async blockHotel(req: Request): Promise<ServiceResponse> {
+        await this.hotelRepository.blockById(req.params.hotelId)
+        return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+    }
 }

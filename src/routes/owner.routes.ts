@@ -12,5 +12,6 @@ ownerRouter.post('/owner-notifications', authenticateToken(['owner']), ownerCont
 ownerRouter.get('/hotels', authenticateToken(['owner']), ownerController.fetchHotels);
 ownerRouter.post('/hotels', authenticateToken(['owner']), validate(hotelSchema), ownerController.addHotel);
 ownerRouter.put('/hotels/:hotelId', authenticateToken(['owner']), validate(hotelSchema), ownerController.updateHotel);
+ownerRouter.patch('/hotels/:hotelId/block', authenticateToken(['owner']), ownerController.blockHotel);
 
 export default ownerRouter;

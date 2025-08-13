@@ -35,11 +35,4 @@ export class UserRepository
         return this.findByEmail(verify.email)
     }
 
-    blockById = (_id: string): Promise<IUser | null> =>
-        this.model.findByIdAndUpdate(
-            _id,
-            [{ $set: { isBlock: { $not: "$isBlock" } } }],
-            { new: true }
-        );
-
 }
