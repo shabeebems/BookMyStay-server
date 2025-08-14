@@ -7,11 +7,13 @@ import { IOwnerService } from "../interfaces/owner.interface";
 import { UserRepository } from "../../../repositories/implementations/user.repositories";
 import { NotificationRepository } from "../../../repositories/implementations/notification.repositories";
 import { HotelRepository } from "../../../repositories/implementations/hotel.repositories";
+import { RoomRepository } from "../../../repositories/implementations/room.repositories";
 
 export class OwnerService implements IOwnerService {
     private notificationRepository = new NotificationRepository();
     private userRepository = new UserRepository();
     private hotelRepository = new HotelRepository();
+    private roomRepository = new RoomRepository();
 
     public async uploadOwnerDocuments(documents: string[], req: Request): Promise<ServiceResponse> {
         let uploadedImages: string[] = [];
@@ -120,5 +122,33 @@ export class OwnerService implements IOwnerService {
     public async blockHotel(req: Request): Promise<ServiceResponse> {
         await this.hotelRepository.blockById(req.params.hotelId)
         return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+    }
+
+    public async addRoom(req: Request): Promise<ServiceResponse> {
+        const { 
+            roomName, roomNumber, sleeps, facilities, description, images, hotelId, rates
+        } = req.body
+        let uploadedImages: string[] = [];
+        
+        for (let base64Image of images) {
+            const result = await CloudinaryV2.uploader.upload(base64Image, {
+                folder: `BookMyStay/hotel`,
+            });
+            uploadedImages.push(result.secure_url);  // Push uploaded image URL
+        }
+        
+        const newRoom = {
+            roomName, roomNumber, sleeps, facilities, description, hotelId, rates,
+            images: uploadedImages
+        };
+        
+        await this.roomRepository.create(newRoom)
+        
+        return { success: true, message: Messages.FETCH_USERS_SUCCESS };
+    }
+
+    public async fetchRooms(req: Request): Promise<ServiceResponse> {
+        const rooms = await this.roomRepository.findByHotelId(req.params.hotelId)
+        return { success: true, message: Messages.FETCH_USERS_SUCCESS, data: rooms };
     }
 }
